@@ -1,6 +1,6 @@
 # MongoDB Hot Backup for Docker
 
-# Docker Hot Backup
+# Usage
 
 This project provides script to run [Hot Backup](#hot-backup) for [percona/percona-server-mongodb].
 
