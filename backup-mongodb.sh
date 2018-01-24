@@ -65,8 +65,10 @@ create_backup() {
 	docker exec $container mongo admin --eval "db.runCommand({createBackup: 1, backupDir: '$backup_dir'})" > $out
 	if ! grep -q '{ "ok" : 1 }' $out; then
 		cat >&2 "$out"
+		rm "$out"
 		return 1
 	fi
+	rm "$out"
 
 	size=$(dirsize "$local_dir")
 	if [ "$size" -le 0 ]; then
