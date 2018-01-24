@@ -4,6 +4,33 @@
 
 This project provides script to run [Hot Backup](#hot-backup) for [percona/percona-server-mongodb].
 
+The `mongo` container needs to be setup with local mount:
+
+```yml
+version: "3"
+
+services:
+  mongo:
+    image: percona/percona-server-mongodb:3.4
+    # (case sensitive) engine: mmapv1, rocksdb, wiredTiger, inMemory
+    command: --storageEngine=wiredTiger
+    volumes:
+      - /srv/backups/mongodb:/backup
+    ports:
+      - 27017:27017
+
+# vim:ts=2:sw=2:et
+```
+
+To run the backup, specify container name or id on commandline:
+
+```
+./backup-mongodb.sh CONTAINER BACKUP_DIR
+```
+
+- `CONTAINER` can be id, name, label, or swarm service name
+- `BACKUP_DIR` is path that is bind mounted into container: `-v $EXTERNAL_BACKUP_DIR:$CONTAINER_BACKUP_DIR` the value for local dir is detected automatically
+
 [percona/percona-server-mongodb]: https://hub.docker.com/r/percona/percona-server-mongodb/
 
 ## Hot Backup
