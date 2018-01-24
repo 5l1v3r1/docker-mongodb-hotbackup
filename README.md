@@ -14,7 +14,7 @@ This project provides script to run [Hot Backup](#hot-backup) for [percona/perco
 [WiredTiger]: https://docs.mongodb.org/manual/core/wiredtiger/
 [MongoRocks]: https://www.percona.com/doc/percona-server-for-mongodb/LATEST/mongorocks.html#mongorocks
 
-To take a hot backup of the database in your current dbpath, run the createBackup command as administrator on the admin database and specify the backup directory.
+To take a hot backup of the database in your current `dbpath`, run the `createBackup` command as administrator on the `admin` database and specify the backup directory.
 
 ```
 > use admin
