@@ -37,7 +37,7 @@ find_container() {
 # https://www.adelton.com/docs/containers/docker-inspect-volumes-mounts
 # find path that is bind mounted into container
 docker_find_bind_mount() {
-	local container="$1" path="$2" out
+	local container="$1" path="$2"
 
 	docker inspect --format "{{ range .Mounts }}{{ if eq .Destination \"$path\" }}{{ .Source }}{{ end }}{{ end }}" "$container"
 }
