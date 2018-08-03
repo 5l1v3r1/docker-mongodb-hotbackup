@@ -49,7 +49,7 @@ dirsize() {
 
 # run backup inside container
 create_backup() {
-	local container="$1" backup_dir="$2" local_dir out size
+	local container="$1" backup_dir="$2" user="$3" password="$4" local_dir out size
 
 	local_dir=$(docker_find_bind_mount "$container" "$backup_dir")
 	test -z "$local_dir" && die "Could not find bind mount for $backup_dir"
@@ -62,7 +62,12 @@ create_backup() {
 	fi
 
 	out=$(mktemp)
-	docker exec $container mongo admin --eval "db.runCommand({createBackup: 1, backupDir: '$backup_dir'})" > $out
+	if [ -n "$user" ] && [ -n "$password" ]; then
+		docker exec $container mongo -u $user -p $password admin --eval "db.runCommand({createBackup: 1, backupDir: '$backup_dir'})" > $out
+	else
+		docker exec $container mongo admin --eval "db.runCommand({createBackup: 1, backupDir: '$backup_dir'})" > $out
+	fi
+
 	if ! grep -q '{ "ok" : 1 }' $out; then
 		cat >&2 "$out"
 		rm "$out"
@@ -81,11 +86,14 @@ create_backup() {
 # BACKUP_DIR is path that is bind mounted into container:
 # -v $EXTERNAL_BACKUP_DIR:$CONTAINER_BACKUP_DIR
 # the value for local dir is detected automatically
+# when USER and PASSWORD are filled, then backup is done via authentication
 
-[ -z "$2" ] && die "Usage: $0 CONTAINER BACKUP_DIR"
+[ -z "$2" ] && die "Usage: $0 CONTAINER BACKUP_DIR USER PASSWORD"
 
 # take container name from commandline
 container=$(find_container "$1") || die "Could not find running container"
 backup_dir="$2"
+user="$3"
+password="$4"
 
-create_backup "$container" "$backup_dir" || die "Failed to create backup"
+create_backup "$container" "$backup_dir" "$user" "$password" || die "Failed to create backup"
