@@ -25,11 +25,13 @@ services:
 To run the backup, specify container name or id on commandline:
 
 ```
-./backup-mongodb.sh CONTAINER BACKUP_DIR
+./backup-mongodb.sh CONTAINER BACKUP_DIR [USER] [PASSWORD]
 ```
 
 - `CONTAINER` can be id, name, label, or swarm service name
 - `BACKUP_DIR` is path that is bind mounted into container: `-v $EXTERNAL_BACKUP_DIR:$CONTAINER_BACKUP_DIR` the value for local dir is detected automatically
+- `USER` mongodb username, optional (will try to autheticate only when filled)
+- `PASSWORD` mongodb password, optional
 
 [percona/percona-server-mongodb]: https://hub.docker.com/r/percona/percona-server-mongodb/
 
